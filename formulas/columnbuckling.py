@@ -44,3 +44,32 @@ def EulerJohnson(EModulus, I_y, area, length, sigma_applied, c=1):
     return False 
 def RambergOsgood():
     return False
+
+
+def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=100):
+    # Radius of gyration
+    r = math.sqrt(I_y / area)
+    # Slenderness ratio
+    lambda_ = (c * length) / r
+    # Ramberg-Osgood exponent
+    n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02)
+
+    # Initial guess for critical stress (Euler)
+    sigma_crit_old = (math.pi**2 * EModulus) / (lambda_**2)
+
+    for i in range(max_iter):
+        # Tangent modulus based on current sigma_crit
+        denominator = 1 + 0.002 * n * (EModulus / sigma_02) * ((sigma_crit_old / sigma_02) ** (n - 1))
+        Et = EModulus / denominator
+
+        # Update critical stress
+        sigma_crit_new = (math.pi**2 * Et) / (lambda_**2)
+
+        # Check for convergence
+        if abs(sigma_crit_new - sigma_crit_old) < tol:
+            break
+
+        sigma_crit_old = sigma_crit_new
+
+    reserveFactor = sigma_crit_new / sigma_applied
+    return round(sigma_crit_new, 2), round(reserveFactor, 2), round(Et, 2), i + 1  # Include Et and iteration count
