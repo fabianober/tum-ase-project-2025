@@ -59,9 +59,9 @@ def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield
     sigma_crippling = alpha * sigma_yield   #Compute crippling stress
     return sigma_crippling
 
-def EulerJohnson(EModulus, I_y, area, length, sigma_yield, sigma_applied, c=1):
+def EulerJohnson(EModulus, I_y, area, length, height_str, thickness_flange, thickness_web, radius, sigma_yield, sigma_applied, c=1):
     lmd = lmd(I_y, area, length, c)
-    sigma_crippel = sigma_crip()    #returns the crippling stress of the T-stringer
+    sigma_crippel = sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield, radius)    #returns the crippling stress of the T-stringer
     sigma_cutoff = min(sigma_crippel, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/sigma_applied
@@ -112,3 +112,10 @@ if __name__ == '__main__':
     res = RambergOsgoodIt(EModulus=72000, I_y=crossecProp[1], area=crossecProp[0], length=600, sigma_applied=200, sigma_02=280, sigma_u=350, epsilon_u=0.1)
     # we expect arround: Et=64605, sigma_crit=218.9, reserveFactor=0.78
     print(res)
+
+    #Example for Euler Crippling 
+    sigma_crit, reserveFactor = EulerJohnson(EModulus=72000, I_y = 79820.4, area=646, length=600, height_str=45, thickness_flange=3, thickness_web=3, radius = 2, sigma_yield=280, sigma_applied=200)
+    sigma_crit_expect = 131.66
+    reserveFactor_expect = 0.784
+    print('The resulting crictical stress is: '+str(sigma_crit)+' And the corresponding reserve Factor: '+ str(reserveFactor))
+    print('The test status is thus: '+str(sigma_crit==sigma_crit_expect and reserveFactor==reserveFactor_expect))
