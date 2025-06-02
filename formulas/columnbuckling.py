@@ -75,32 +75,39 @@ def RambergOsgood():
 
 
 def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=1000):
-    # Radius of gyration
-    r = math.sqrt(I_y / area)
-    # Slenderness ratio
-    lambda_ = (c * length) / r
-    # Ramberg-Osgood exponent
-    n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02)
+    r = math.sqrt(I_y / area) #Radius of gyration
+    lambda_ = (c * length) / r # Slenderness
+    n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
 
-    # Initial guess for critical stress (Euler)
-    sigma_crit_old = (math.pi**2 * EModulus) / (lambda_**2)
+    # Start from the applied stress (initial)
+    sigma_crit = sigma_applied
+    step = 0.2  # Initial step size
+    direction = -1  # 1 for increasing, -1 for decreasing (This is arbitrary tbh)
 
     for i in range(max_iter):
-        # Tangent modulus based on current sigma_crit
-        denominator = 1 + 0.002 * n * (EModulus / sigma_02) * ((sigma_crit_old / sigma_02) ** (n - 1))
-        Et = EModulus / denominator
+        # Compute tangent modulus at current stress
+        denom = 1 + 0.002 * n * (EModulus / sigma_02) * ((sigma_crit / sigma_02) ** (n - 1))
+        Et = EModulus / denom
 
-        # Update critical stress
-        sigma_crit_new = (math.pi**2 * Et) / (lambda_**2)
+        # Compute critical stress from updated tangent modulus
+        sigma_new = (math.pi**2 * Et) / (lambda_**2)
 
-        # Check for convergence
-        if abs(sigma_crit_new - sigma_crit_old) < tol:
+        diff = sigma_new - sigma_crit
+
+        # For overshot, reverse direction *-1 and reduce step size by 50%
+        if direction * diff < 0:
+            step *= 0.5
+            direction *= -1
+
+        # Update sigma_crit
+        sigma_crit = sigma_crit + direction * step * abs(diff)
+
+        # Break out, if diff between sigma_new and sigma_crit is smaller than tol=0.01
+        if abs(diff) < tol:
             break
 
-        sigma_crit_old = sigma_crit_new
-
-    reserveFactor = sigma_crit_new / sigma_applied
-    return round(sigma_crit_new, 2), round(reserveFactor, 2), round(Et, 2), i + 1  # Include Et and iteration count
+    reserveFactor = sigma_crit / sigma_applied
+    return round(sigma_crit, 2), round(reserveFactor, 2) #return(critical stress, reserve factor)
 
 
 
