@@ -28,10 +28,20 @@ def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     return finalM, sigma_crit, abs(reserveFactor)
 
 def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
-    print("Biaxial simply supported")
     global N 
     global M
-    sigma_crit_it = dict()
+    #Control if panel needs to be flipped
+    if sigma_y < sigma_x: 
+        #Swap stresses 
+        sigma_temp = sigma_x
+        sigma_x = sigma_y
+        sigma_y = sigma_temp
+        #swap dimensions
+        length_temp = length
+        length = width
+        width = length_temp
+
+    sigma_crit_it = dict()  #Create dictionary to store the critcial stresses for different n,m
     alpha = length/width
     beta = sigma_y/sigma_x
     #Looping over n half waves in width direction and over m half waves in length direction 
