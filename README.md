@@ -1,15 +1,6 @@
 # tum-ase-project-2025
 
-This project analyses and optimises a wing structure using FEM data (from CSV files) and material properties. We use **Python**, **Pandas**, and **Jupyter Notebooks**, all inside **GitHub Codespaces** – so no local installation needed.
-
-## 🚀 Start Here (in Codespaces)
-
-Click this link to start working in the browser (no setup needed):  
-👉 [Open in Codespaces](https://github.com/codespaces/supreme-space-train-r6q5qrq4xqrf5j56?editor=web)
-
-Once opened:
-- Go to the `notebooks/` folder
-- Open or create a `.ipynb` file
+This project analyses and optimises a wing structure using FEM data (from CSV files) and material properties. We use **Python**, **Pandas**, and **Jupyter Notebooks**.
 
 ## 👥 Collaborating (Step-by-step)
 
@@ -38,4 +29,5 @@ Follow these steps **every time** you start or finish working:
 
 `/data/ `         → CSVs from FEM software  
 `/notebooks/`     → Jupyter notebooks (do your work here)  
-`requirements.txt` → Python packages
+`requirements.txt` → Python packages  
+`/formulas/` → Python files with formulas and calculations
