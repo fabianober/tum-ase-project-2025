@@ -67,43 +67,6 @@ def EulerJohnson(EModulus, I_y, area, length, sigma_yield, sigma_applied, c=1):
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor 
 
-def RambergOsgood():
-    return False
-    r = math.sqrt(I_y / area) #Radius of gyration
-    lambda_ = (c * length) / r # Slenderness
-    n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
-
-    # Start from the applied stress (initial)
-    sigma_crit = sigma_applied 
-    step = 1  # Initial step size
-    direction = -1 # -1 for moving down 1 for moving up   
-
-    for i in range(max_iter):
-        # Compute tangent modulus at current stress
-        denom = 1 + 0.002 * n * (EModulus / sigma_02) * ((sigma_crit / sigma_02) ** (n - 1))
-        Et = EModulus / denom
-
-        # Compute critical stress from updated tangent modulus
-        sigma_new = (math.pi**2 * Et) / (lambda_**2)
-
-        diff = sigma_new - sigma_crit
-
-        # For overshot, reverse direction *-1 and reduce step size by 50%
-        if diff < 0:
-            sigma_crit -= step
-            if direction == 1:
-                step *= 0.5
-        elif diff > 0:
-            sigma_crit +=diff
-            if direction == -1:
-                step *= 0.5
-        
-        # Break out, if diff between sigma_new and sigma_crit is smaller than tol=0.01
-        if abs(diff) < tol:
-            break
-
-    reserveFactor = sigma_crit / sigma_applied
-    return round(sigma_crit, 2), round(reserveFactor, 2) #return(critical stress, reserve factor)
 
 def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=1000):
     r = math.sqrt(I_y / area) #Radius of gyration
