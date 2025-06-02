@@ -60,6 +60,12 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
 
+def combinedBiaxialShear(EModulus, nu, length, width, thickness, sigma_x, sigma_y, tau_xy):
+    finalN, finalM, sigma_crit, reserveFactorBi = biaxialSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, sigma_x= sigma_x, sigma_y=sigma_y)
+    tau_crit, reserveFactorShear = shearSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, tau_xy=tau_xy)
+    combinedReserveFactor = round(1/(1/reserveFactorBi + pow(1/reserveFactorShear,2)),2)
+    return abs(combinedReserveFactor)
+
 #Running test on all functions 
 if __name__ == '__main__':
     # Define test data
@@ -81,12 +87,16 @@ if __name__ == '__main__':
     #Shear calculation 
     tau_crit_expect = 228.73
     shearReserveFactor_expect = 3.05
+
+    # Combined shear and biaxial calculation 
+    combinedReserveFactor_expect = 1.13
+
     # Run tests
     #uniaxialF_calc()
     #uniaxialSS_calc()
     finalN_bi, finalM_bi, sigma_crit_bi, biReserveFactor = biaxialSS_calc(EModulus=E, nu=nu, length=length, width=width, thickness=thickness, sigma_x=sigma_x, sigma_y= sigma_y)
     tau_crit, shearReserveFactor = shearSS_calc(EModulus=E, nu=nu, length=length, width= width, thickness=thickness, tau_xy=tau_xy ) 
-    
+    combinedReserveFactor = combinedBiaxialShear(EModulus=E, nu=nu, length=length, width=width, thickness=thickness, sigma_x=sigma_x, sigma_y= sigma_y, tau_xy=tau_xy)
     # Output test results
     #Biaxial test
     print('The biaxial test resulted in the following values')
@@ -99,4 +109,8 @@ if __name__ == '__main__':
     print('The shear test resulted in the following values')
     print('A critical stress of: '+str(tau_crit)+' And a reserve factor of: '+str(shearReserveFactor))
     print('The test comes out to be: '+str(shearReserveFactor==shearReserveFactor_expect and tau_crit==tau_crit_expect))
+    print()
     #Combiend biaxial and shear test
+    print('The combined shear and biaxial test resulted in the following values')
+    print('A reserve factor of: '+str(combinedReserveFactor))
+    print('The test comes out to be: '+str(combinedReserveFactor==combinedReserveFactor_expect))
