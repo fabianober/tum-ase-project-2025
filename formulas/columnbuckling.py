@@ -1,4 +1,4 @@
-# this file contains the column buckling formulas
+import math
 
 def comb_teeStringer_skin(height_str, width_str, thickness_str, thickness_skin, stringer_pitch):
 
@@ -17,5 +17,14 @@ print("I_y_skin:", res[0])
 print("I_y_flange:", res[1])
 print("I_y_web:", res[2])
 
-def EulerBuckling():
-    return 2
+def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
+    r = math.sqrt(I_y/area) 
+    lmd = (c*length)/r
+    sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
+    reserveFactor = sigma_crit/sigma_applied
+    return sigma_crit, reserveFactor
+
+def EulerJohnson(EModulus, I_y, area, length, sigma_applied, c=1):
+    return False 
+def RambergOsgood():
+    return False
