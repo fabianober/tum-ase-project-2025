@@ -80,9 +80,9 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
 
     # Start from the applied stress (initial)
-    sigma_crit = sigma_applied
-    step = 0.2  # Initial step size
-    direction = -1  # 1 for increasing, -1 for decreasing (This is arbitrary tbh)
+    sigma_crit = sigma_applied * 100
+    step = 1  # Initial step size
+    direction = -1 # -1 for moving down 1 for moving up   
 
     for i in range(max_iter):
         # Compute tangent modulus at current stress
@@ -95,13 +95,15 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
         diff = sigma_new - sigma_crit
 
         # For overshot, reverse direction *-1 and reduce step size by 50%
-        if direction * diff < 0:
-            step *= 0.5
-            direction *= -1
-
-        # Update sigma_crit
-        sigma_crit = sigma_crit + direction * step * abs(diff)
-
+        if diff < 0:
+            sigma_crit -= step
+            if direction == 1:
+                step *= 0.5
+        elif diff > 0:
+            sigma_crit +=diff
+            if direction == -1:
+                step *= 0.5
+        
         # Break out, if diff between sigma_new and sigma_crit is smaller than tol=0.01
         if abs(diff) < tol:
             break
