@@ -77,7 +77,7 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
 
     # Start from the applied stress (initial)
-    sigma_crit = sigma_applied * 100
+    sigma_crit = sigma_applied 
     step = 1  # Initial step size
     direction = -1 # -1 for moving down 1 for moving up   
 
