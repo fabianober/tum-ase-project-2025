@@ -46,7 +46,7 @@ def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield
     ki = 0.41   #Support factor 
     #Effective width of web 
     b12 =  height_str - thickness_flange/2 * (2-0.5*thickness_web/thickness_flange-0.2*r**2/(thickness_flange*thickness_web))
-    xi = b12/thickness_web * math.sqrt(sigma_yield/ki*EModulus) #slenderness of the beam 
+    xi = b12/thickness_web * math.sqrt(sigma_yield/(ki*EModulus)) #slenderness of the beam 
     #Compute alpha scaling 
     alpha = 0
     if 0.4 <= xi <= 1.095:
@@ -65,9 +65,10 @@ def EulerJohnson(EModulus, I_y, area, length, height_str, thickness_flange, thic
     sigma_cutoff = min(sigma_crippel, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/sigma_applied
-    return sigma_crit, reserveFactor 
+    return round(sigma_crit,2), round(reserveFactor,2) 
 
 
+#Ramberg Osgood
 def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.001):
     lmd = hp.lmd(I_y, area, length, c)
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
@@ -114,7 +115,7 @@ if __name__ == '__main__':
 
     #Example for Euler Crippling 
     sigma_crit, reserveFactor = EulerJohnson(EModulus=72000, I_y = 79820.4, area=646, length=600, height_str=45, thickness_flange=3, thickness_web=3, radius = 2, sigma_yield=280, sigma_applied=200)
-    sigma_crit_expect = 131.66
-    reserveFactor_expect = 0.784
+    sigma_crit_expect = 131.65
+    reserveFactor_expect = 0.66
     print('The resulting crictical stress is: '+str(sigma_crit)+' And the corresponding reserve Factor: '+ str(reserveFactor))
     print('The test status is thus: '+str(sigma_crit==sigma_crit_expect and reserveFactor==reserveFactor_expect))
