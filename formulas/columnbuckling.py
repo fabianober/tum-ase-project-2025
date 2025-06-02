@@ -8,7 +8,6 @@ def comb_teeStringer_skin(height_str, width_str, thickness_str, thickness_skin, 
     I_y_web = round((thickness_str*(height_str-thickness_str)**3)/12, 2)
 
     # combined moment of inertia (will be done)
-    # TEST: this line is new
 
     return I_y_skin, I_y_flange, I_y_web
 
@@ -19,4 +18,4 @@ print("I_y_flange:", res[1])
 print("I_y_web:", res[2])
 
 def EulerBuckling():
-    print("My code, hi") #Added comment
+    return True
