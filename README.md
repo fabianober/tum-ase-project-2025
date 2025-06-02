@@ -29,5 +29,5 @@ Follow these steps **every time** you start or finish working:
 
 `/data/ `         → CSVs from FEM software  
 `/notebooks/`     → Jupyter notebooks (do your work here)  
-`requirements.txt` → Python packages
+`requirements.txt` → Python packages  
 `/formulas/` → Python files with formulas and calculations
