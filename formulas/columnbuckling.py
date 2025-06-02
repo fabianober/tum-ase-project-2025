@@ -17,3 +17,6 @@ res = comb_teeStringer_skin(height_str=45, width_str=40, thickness_str=3, thickn
 print("I_y_skin:", res[0])
 print("I_y_flange:", res[1])
 print("I_y_web:", res[2])
+
+def EulerBuckling():
+    print("My code, hi")
