@@ -69,9 +69,6 @@ def EulerJohnson(EModulus, I_y, area, length, sigma_yield, sigma_applied, c=1):
 
 def RambergOsgood():
     return False
-
-
-def RambergOsgoodIt_Yannis(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=1000):
     r = math.sqrt(I_y / area) #Radius of gyration
     lambda_ = (c * length) / r # Slenderness
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
