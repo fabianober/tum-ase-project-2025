@@ -9,7 +9,7 @@ def uniaxialF_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("Uniaxial free edge")
     sigma_crit = round((EModulus*pow(math.pi,2)) / (12*(1-pow(nu,2))) * pow(thickness/length,2),2)   #Calculate the critical stress 
     reserveFactor = round(sigma_crit/sigma_x, 2)  #Calculate the reserve factor for this case 
-    return sigma_crit, reserveFactor
+    return sigma_crit, abs(reserveFactor)
 
 def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("Uniaxial simply supported")
@@ -25,7 +25,7 @@ def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Recover the number of half waves, where the minimum critical stress occurs 
     sigma_crit = sigma_crit_it[finalM]                      #Also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x, 2)                      #Calculate the reserve factor with it 
-    return finalM, sigma_crit, reserveFactor
+    return finalM, sigma_crit, abs(reserveFactor)
 
 def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
     print("Biaxial simply supported")
@@ -44,7 +44,7 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
     finalN, finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Select the smallest critcial stress and recover n and m 
     sigma_crit = sigma_crit_it[(finalN,finalM)]                     #And then also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
-    return finalN, finalM, sigma_crit, reserveFactor
+    return finalN, finalM, sigma_crit, abs(reserveFactor)
 
 def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     alpha = length/width
@@ -55,13 +55,48 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
     tau_crit = round(tau_e * k_tau,2)
     reserveFactor = round(tau_crit/tau_xy,2)
-    return tau_crit, reserveFactor
+    return tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
 
 #Running test on all functions 
-if __name__ == 'main':
-    # Define test data 
-    # Run tests 
+if __name__ == '__main__':
+    # Define test data
+    E = 70000
+    nu = 0.3
+    length = 600
+    width = 200
+    thickness = 5
+    sigma_x = -100
+    sigma_y = -20
+    tau_xy = 75
+    # Expected results 
+    # Biaxial calculation
+    finalN_bi_expect = 1 
+    finalM_bi_expect = 2
+    sigma_crit_bi_expect = 128.02
+    biReserveFactor_expect = 1.28
+
+    #Shear calculation 
+    tau_crit_expect = 228.73
+    shearReserveFactor_expect = 3.05
+    # Run tests
+    #uniaxialF_calc()
+    #uniaxialSS_calc()
+    finalN_bi, finalM_bi, sigma_crit_bi, biReserveFactor = biaxialSS_calc(EModulus=E, nu=nu, length=length, width=width, thickness=thickness, sigma_x=sigma_x, sigma_y= sigma_y)
+    tau_crit, shearReserveFactor = shearSS_calc(EModulus=E, nu=nu, length=length, width= width, thickness=thickness, tau_xy=tau_xy ) 
+    
     # Output test results
+    #Biaxial test
+    print('The biaxial test resulted in the following values')
+    print('Number of halfwaves in width direction: '+str(finalN_bi))
+    print('Number of halfwaves in longitudinal direction: '+str(finalM_bi))
+    print('A critical stress of: '+str(sigma_crit_bi)+' And a reserve factor of: '+str(biReserveFactor))
+    print('The test comes out to be: '+ str(finalN_bi==finalN_bi_expect and finalM_bi==finalM_bi_expect and sigma_crit_bi==sigma_crit_bi_expect and biReserveFactor==biReserveFactor_expect))
+    print()
+    #Shear test
+    print('The shear test resulted in the following values')
+    print('A critical stress of: '+str(tau_crit)+' And a reserve factor of: '+str(shearReserveFactor))
+    print('The test comes out to be: '+str(shearReserveFactor==shearReserveFactor_expect and tau_crit==tau_crit_expect))
+    #Combiend biaxial and shear test
