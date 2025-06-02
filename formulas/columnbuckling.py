@@ -35,8 +35,6 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
-    # r = math.sqrt(I_y/area) 
-    # lmd = (c*length)/r
     lmd = lmd(I_y, area, length, c)
     sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
     reserveFactor = sigma_crit/sigma_applied
@@ -62,8 +60,7 @@ def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield
     return sigma_crippling
 
 def EulerJohnson(EModulus, I_y, area, length, sigma_yield, sigma_applied, c=1):
-    r = r = math.sqrt(I_y/area) #radius of gyration 
-    lmd = (c*length)/r      #lambda slenders factor
+    lmd = lmd(I_y, area, length, c)
     sigma_crippel = sigma_crip()    #returns the crippling stress of the T-stringer
     sigma_cutoff = min(sigma_crippel, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
@@ -115,7 +112,7 @@ if __name__ == '__main__':
     # Example usage of crosssectional_properties_tee_skin
     crossecProp = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
     print(f"Area: {crossecProp[0]}, Moment of Inertia: {crossecProp[1]}")
-    
+
     # Example usage of RambergOsgoodIt
     res = RambergOsgoodIt(EModulus=72000, I_y=crossecProp[1], area=crossecProp[0], length=600, sigma_applied=200, sigma_02=280, sigma_u=350, epsilon_u=0.1)
     # we expect arround: Et=64605, sigma_crit=218.9, reserveFactor=0.78
