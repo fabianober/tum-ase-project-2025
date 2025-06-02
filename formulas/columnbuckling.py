@@ -1,5 +1,7 @@
 import math
 
+#test01
+
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
     # Individual moment of inertia calculations for the skin, flange, and web of a T-stringer
