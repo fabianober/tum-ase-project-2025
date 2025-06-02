@@ -8,7 +8,7 @@ def comb_teeStringer_skin(height_str, width_str, thickness_str, thickness_skin, 
     I_y_web = round((thickness_str*(height_str-thickness_str)**3)/12, 2)
 
     # combined moment of inertia (will be done)
-
+    # TEST: this line is new
 
     return I_y_skin, I_y_flange, I_y_web
 
