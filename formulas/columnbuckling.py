@@ -31,7 +31,6 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
     return round(A_tot, 2), round(I_y_bar, 2)
 
 
-
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
@@ -39,6 +38,7 @@ def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
     sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor
+
 
 #Euler Johnson with Crippling
 def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield, r = 0):
@@ -55,7 +55,6 @@ def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield
         alpha = 0.78/xi
     elif 1.633 < xi:
         alpha = 0.69/ pow(xi,0.75)
-
     sigma_crippling = alpha * sigma_yield   #Compute crippling stress
     return sigma_crippling
 
@@ -103,6 +102,7 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
     reserveFactor = sigma_crit / sigma_applied
     return round(sigma_crit, 2), round(reserveFactor, 2) #return(critical stress, reserve factor)
 
+#Test cases for the formula 
 if __name__ == '__main__':
     # Example usage of crosssectional_properties_tee_skin
     crossecProp = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
