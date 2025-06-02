@@ -18,4 +18,4 @@ print("I_y_flange:", res[1])
 print("I_y_web:", res[2])
 
 def EulerBuckling():
-    return True
+    return 2
