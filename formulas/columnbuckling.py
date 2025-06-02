@@ -1,4 +1,5 @@
 import math
+import helpers
 
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
@@ -33,15 +34,44 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
 crossecProp = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
 print(f"Area: {crossecProp[0]}, Moment of Inertia: {crossecProp[1]}")
 
+#Column Buckling formulas 
+#Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
-    r = math.sqrt(I_y/area) 
-    lmd = (c*length)/r
+    # r = math.sqrt(I_y/area) 
+    # lmd = (c*length)/r
+    lmd = lmd(I_y, area, length, c)
     sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor
 
-def EulerJohnson(EModulus, I_y, area, length, sigma_applied, c=1):
-    return False 
+#Euler Johnson with Crippling
+def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield, r = 0):
+    #We assume a T-Stringer attached to the skin
+    ki = 0.41   #Support factor 
+    #Effective width of web 
+    b12 =  height_str - thickness_flange/2 * (2-0.5*thickness_web/thickness_flange-0.2*r**2/(thickness_flange*thickness_web))
+    xi = b12/thickness_web * math.sqrt(sigma_yield/ki*EModulus) #slenderness of the beam 
+    #Compute alpha scaling 
+    alpha = 0
+    if 0.4 <= xi <= 1.095:
+        alpha = 1.4-0.628*xi
+    elif 1.095 < xi <=1.633:
+        alpha = 0.78/xi
+    elif 1.633 < xi:
+        alpha = 0.69/ pow(xi,0.75)
+
+    sigma_crippling = alpha * sigma_yield   #Compute crippling stress
+    return sigma_crippling
+
+def EulerJohnson(EModulus, I_y, area, length, sigma_yield, sigma_applied, c=1):
+    r = r = math.sqrt(I_y/area) #radius of gyration 
+    lmd = (c*length)/r      #lambda slenders factor
+    sigma_crippel = sigma_crip()    #returns the crippling stress of the T-stringer
+    sigma_cutoff = min(sigma_crippel, sigma_yield)  #Determine the inzterpolation stress
+    sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
+    reserveFactor = sigma_crit/sigma_applied
+    return sigma_crit, reserveFactor 
+
 def RambergOsgood():
     return False
 
