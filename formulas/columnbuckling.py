@@ -1,7 +1,5 @@
 import math
 
-#test01
-
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
     # Individual moment of inertia calculations for the skin, flange, and web of a T-stringer
@@ -32,8 +30,8 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
     return round(A_tot, 2), round(I_y_bar, 2)
 
 # Example usage of crosssectional_properties_tee_skin
-res = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
-print(f"Area: {res[0]}, Moment of Inertia: {res[1]}")
+crossecProp = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
+print(f"Area: {crossecProp[0]}, Moment of Inertia: {crossecProp[1]}")
 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
     r = math.sqrt(I_y/area) 
@@ -48,7 +46,7 @@ def RambergOsgood():
     return False
 
 
-def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=100):
+def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=1000):
     # Radius of gyration
     r = math.sqrt(I_y / area)
     # Slenderness ratio
@@ -75,3 +73,8 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
 
     reserveFactor = sigma_crit_new / sigma_applied
     return round(sigma_crit_new, 2), round(reserveFactor, 2), round(Et, 2), i + 1  # Include Et and iteration count
+
+# Example usage of RambergOsgoodIt
+res = RambergOsgoodIt(EModulus=72000, I_y=crossecProp[1], area=crossecProp[0], length=600, sigma_applied=200, sigma_02=280, sigma_u=350, epsilon_u=0.1)
+# we expect arround: Et=64605, sigma_crit=218.9, reserveFactor=0.78
+print(res)
