@@ -1,4 +1,5 @@
 import math
+import helpers
 
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
@@ -36,8 +37,9 @@ print(f"Area: {crossecProp[0]}, Moment of Inertia: {crossecProp[1]}")
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
-    r = math.sqrt(I_y/area)    #radius of gyration
-    lmd = (c*length)/r      #lambda slenders factor
+    # r = math.sqrt(I_y/area) 
+    # lmd = (c*length)/r
+    lmd = lmd(I_y, area, length, c)
     sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor
