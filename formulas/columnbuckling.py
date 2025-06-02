@@ -1,5 +1,5 @@
 import math
-import helpers
+import helpers as hp
 
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
@@ -35,7 +35,7 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
-    lmd = lmd(I_y, area, length, c)
+    lmd = hp.lmd(I_y, area, length, c)
     sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor
@@ -60,7 +60,7 @@ def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield
     return sigma_crippling
 
 def EulerJohnson(EModulus, I_y, area, length, height_str, thickness_flange, thickness_web, radius, sigma_yield, sigma_applied, c=1):
-    lmd = lmd(I_y, area, length, c)
+    lmd = hp.lmd(I_y, area, length, c)
     sigma_crippel = sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield, radius)    #returns the crippling stress of the T-stringer
     sigma_cutoff = min(sigma_crippel, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
@@ -68,9 +68,8 @@ def EulerJohnson(EModulus, I_y, area, length, height_str, thickness_flange, thic
     return sigma_crit, reserveFactor 
 
 
-def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.01, max_iter=1000):
-    r = math.sqrt(I_y / area) #Radius of gyration
-    lambda_ = (c * length) / r # Slenderness
+def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.001):
+    lmd = hp.lmd(I_y, area, length, c)
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
 
     # Start from the applied stress (initial)
@@ -78,13 +77,13 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
     step = 0.2  # Initial step size
     direction = -1  # 1 for increasing, -1 for decreasing (This is arbitrary tbh)
 
-    for i in range(max_iter):
+    while True:
         # Compute tangent modulus at current stress
         denom = 1 + 0.002 * n * (EModulus / sigma_02) * ((sigma_crit / sigma_02) ** (n - 1))
         Et = EModulus / denom
 
         # Compute critical stress from updated tangent modulus
-        sigma_new = (math.pi**2 * Et) / (lambda_**2)
+        sigma_new = (math.pi**2 * Et) / (lmd**2)
 
         diff = sigma_new - sigma_crit
 
