@@ -5,6 +5,7 @@ import numpy as np
 N = 10
 M = 20
 
+
 def uniaxialF_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("Uniaxial free edge")
     sigma_crit = round((EModulus*pow(math.pi,2)) / (12*(1-pow(nu,2))) * pow(thickness/length,2),2)   #Calculate the critical stress 
@@ -54,7 +55,7 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
     finalN, finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Select the smallest critcial stress and recover n and m 
     sigma_crit = sigma_crit_it[(finalN,finalM)]                     #And then also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
-    return finalN, finalM, sigma_crit, abs(reserveFactor)
+    return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
 def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     alpha = length/width
@@ -65,16 +66,23 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
     tau_crit = round(tau_e * k_tau,2)
     reserveFactor = round(tau_crit/tau_xy,2)
-    return tau_crit, abs(reserveFactor)
+    return k_tau, tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
 
 def combinedBiaxialShear(EModulus, nu, length, width, thickness, sigma_x, sigma_y, tau_xy):
-    finalN, finalM, sigma_crit, reserveFactorBi = biaxialSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, sigma_x= sigma_x, sigma_y=sigma_y)
-    tau_crit, reserveFactorShear = shearSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, tau_xy=tau_xy)
+    finalN, finalM,k_biaxial, sigma_crit, reserveFactorBi = biaxialSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, sigma_x= sigma_x, sigma_y=sigma_y)
+    k_shear, tau_crit, reserveFactorShear = shearSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, tau_xy=tau_xy)
     combinedReserveFactor = round(1/(1/reserveFactorBi + pow(1/reserveFactorShear,2)),2)
-    return abs(combinedReserveFactor)
+    return k_shear, k_biaxial, abs(combinedReserveFactor)
+
+
+# Function for calling other buckling formulas with row values 
+def panelBuckApply(row, EModulus, nu):
+    k_shear, k_biaxial, reserveFactor = combinedBiaxialShear(EModulus=EModulus, nu=nu, length=row['length'], width=row['width'], thickness=row['thickness'], sigma_x=row['sigmaXX'], sigma_y=row['sigmaYY'], tau_xy=row['sigmaXY'] )
+    return k_shear, k_biaxial, reserveFactor 
+
 
 #Running test on all functions 
 if __name__ == '__main__':
