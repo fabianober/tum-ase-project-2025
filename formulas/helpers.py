@@ -16,6 +16,8 @@ def crosssectional_properties_tee_skin_row(row):
         stringer_pitch=row['stringer_pitch']
     )
 
+
+
 #Running test on all functions 
 if __name__ == '__main__':
     print(lmd(I_y=79820.37, area=646, length=600, c=1), "and expected: 53.97")
