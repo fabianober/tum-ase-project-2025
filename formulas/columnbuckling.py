@@ -30,6 +30,61 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
 
     return round(A_tot, 2), round(I_y_bar, 2)
 
+def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness, thickness_skin, stringer_pitch):
+    """
+    DIM1: height of the hat section
+    DIM2: bottom flange width (left)
+    DIM3: top horizontal part width
+    DIM4: bottom flange width (right)
+    thickness: thickness of the hat section (assumed uniform)
+    thickness_skin: thickness of skin
+    stringer_pitch: width of skin area per stringer (used in skin calc)
+    """
+
+    # Area of each part
+    A_skin = stringer_pitch * thickness_skin
+    A_top = DIM3 * thickness
+    A_left_web = thickness * (DIM1 - thickness)
+    A_right_web = thickness * (DIM1 - thickness)
+    A_bottom_left = DIM2 * thickness
+    A_bottom_right = DIM4 * thickness
+    A_tot = A_skin + A_top + A_left_web + A_right_web + A_bottom_left + A_bottom_right
+
+    # z-coordinates (from bottom)
+    z_skin = -thickness_skin / 2
+    z_bottom = thickness / 2
+    z_web = (DIM1 - thickness) / 2 + thickness
+    z_top = DIM1 - thickness / 2
+
+    # Centroid (z_bar)
+    z_bar = (
+        A_skin * z_skin +
+        A_top * z_top +
+        A_left_web * z_web +
+        A_right_web * z_web +
+        A_bottom_left * z_bottom +
+        A_bottom_right * z_bottom
+    ) / A_tot
+
+    # Moment of inertia about y-axis for each component
+    I_y_skin = (stringer_pitch * thickness_skin**3) / 12
+    I_y_top = (thickness * DIM3**3) / 12
+    I_y_webs = 2 * (thickness * (DIM1 - thickness)**3) / 12
+    I_y_bottoms = (thickness * DIM2**3) / 12 + (thickness * DIM4**3) / 12
+
+    # Parallel axis theorem
+    contrib_skin = I_y_skin + A_skin * (z_skin - z_bar)**2
+    contrib_top = I_y_top + A_top * (z_top - z_bar)**2
+    contrib_webs = I_y_webs + A_left_web * (z_web - z_bar)**2 + A_right_web * (z_web - z_bar)**2
+    contrib_bottoms = (
+        (thickness * DIM2**3) / 12 + A_bottom_left * (z_bottom - z_bar)**2 +
+        (thickness * DIM4**3) / 12 + A_bottom_right * (z_bottom - z_bar)**2
+    )
+
+    I_yy = contrib_skin + contrib_top + contrib_webs + contrib_bottoms
+
+    return round(A_tot, 2), round(I_yy, 2)
+
 
 #Column Buckling formulas 
 #Euler Buckling case 
