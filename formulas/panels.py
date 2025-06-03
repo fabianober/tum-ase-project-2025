@@ -42,18 +42,19 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
         length = width
         width = length_temp
 
-    sigma_crit_it = dict()  #Create dictionary to store the critcial stresses for different n,m
+    k_sigma_it = dict()  #Create dictionary to store the critcial stresses for different n,m
     alpha = length/width
     beta = sigma_y/sigma_x
+    sigma_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)         #refernence stress
     #Looping over n half waves in width direction and over m half waves in length direction 
     for n in range(1,N):        
         for m in range(1,M):
             k_sigma = pow((m**2 + n**2 * alpha**2), 2)/ (alpha**2 * (m**2 + beta * n**2 * alpha**2))  #buckling factor 
-            sigma_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)         #refernence stress
             if k_sigma > 0:
-                sigma_crit_it.update({(n,m):round(k_sigma * sigma_e,2)})                                    #critical stress dictionary in dependence of m and n 
-    finalN, finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Select the smallest critcial stress and recover n and m 
-    sigma_crit = sigma_crit_it[(finalN,finalM)]                     #And then also recover the corresponding critical stress 
+                k_sigma_it.update({(n,m):round(abs(k_sigma),2)})                                    #critical stress dictionary in dependence of m and n 
+    finalN, finalM = min(k_sigma_it, key = k_sigma_it.get)    #Select the smallest critcial stress and recover n and m 
+    k_sigma_min = k_sigma_it[(finalN,finalM)] 
+    sigma_crit = k_sigma_min *  sigma_e                   #And then also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
     return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
