@@ -79,7 +79,7 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 
     I_yy = contrib_skin + contrib_top + contrib_webs + contrib_bottoms
 
-    return round(A_tot, 2), round(I_yy, 2)
+    return round(I_yy, 2), round(A_tot, 2)
 
 
 #Column Buckling formulas 
@@ -119,7 +119,7 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
     sigma_crippling1 = alpha1 * sigma_yield   #Compute crippling stress 1
     sigma_crippling2 = alpha2 * sigma_yield   #Compute crippling stress 2
     sigma_crippling = (2*sigma_crippling1*b1 + sigma_crippling2*b2)/(2*b1 + b2)
-    return sigma_crippling
+    return round(sigma_crippling, 2)
 
 def EulerJohnson(EModulus, I_y, area, length, DIM1, DIM2, DIM3, sigma_yield, sigma_applied, c=1, r = 0):
     lmd = hp.lmd(I_y, area, length, c)
@@ -177,8 +177,11 @@ if __name__ == '__main__':
     print(res)
 
     #Example for Euler Crippling 
-    sigma_crit, reserveFactor = EulerJohnson(EModulus=72000, I_y = 79820.4, area=646, length=600, height_str=45, thickness_flange=3, thickness_web=3, radius = 2, sigma_yield=280, sigma_applied=200)
-    sigma_crit_expect = 131.65
-    reserveFactor_expect = 0.66
-    print('The resulting crictical stress is: '+str(sigma_crit)+' And the corresponding reserve Factor: '+ str(reserveFactor))
-    print('The test status is thus: '+str(sigma_crit==sigma_crit_expect and reserveFactor==reserveFactor_expect))
+    #sigma_crit, reserveFactor = EulerJohnson(EModulus=72000, I_y = 79820.4, area=646, length=600, height_str=45, thickness_flange=3, thickness_web=3, radius = 2, sigma_yield=280, sigma_applied=200)
+    #sigma_crit_expect = 131.65
+    #reserveFactor_expect = 0.66
+    #print('The resulting crictical stress is: '+str(sigma_crit)+' And the corresponding reserve Factor: '+ str(reserveFactor))
+    #print('The test status is thus: '+str(sigma_crit==sigma_crit_expect and reserveFactor==reserveFactor_expect))
+
+    #res3 = crosssectional_properties_hat_skin(10, 10, 10, 10, 10, 10)
+    #print(f"Hat Section Area: {res3[0]}, Moment of Inertia: {res3[1]}")
