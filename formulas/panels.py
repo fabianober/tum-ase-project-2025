@@ -51,10 +51,10 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
         for m in range(1,M):
             k_sigma = pow((m**2 + n**2 * alpha**2), 2)/ (alpha**2 * (m**2 + beta * n**2 * alpha**2))  #buckling factor 
             if k_sigma > 0:
-                k_sigma_it.update({(n,m):round(abs(k_sigma),2)})                                    #critical stress dictionary in dependence of m and n 
+                k_sigma_it.update({(n,m):round(k_sigma,2)})                                    #critical stress dictionary in dependence of m and n 
     finalN, finalM = min(k_sigma_it, key = k_sigma_it.get)    #Select the smallest critcial stress and recover n and m 
     k_sigma_min = k_sigma_it[(finalN,finalM)] 
-    sigma_crit = k_sigma_min *  sigma_e                   #And then also recover the corresponding critical stress 
+    sigma_crit = round(k_sigma_min *  sigma_e, 2)                   #And then also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
     return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
