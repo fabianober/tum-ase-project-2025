@@ -42,8 +42,8 @@ def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
 
 #Euler Johnson with Crippling
 def sigma_crip(EModulus, height_str, thickness_flange, thickness_web,sigma_yield, r = 0):
-    #We assume a T-Stringer attached to the skin
-    ki = 0.41   #Support factor 
+    #We have a HAT-Stringer attached to the skin
+    ki = 3.6   #Support factor for relevant parts of stringer
     #Effective width of web 
     b12 =  height_str - thickness_flange/2 * (2-0.5*thickness_web/thickness_flange-0.2*r**2/(thickness_flange*thickness_web))
     xi = b12/thickness_web * math.sqrt(sigma_yield/(ki*EModulus)) #slenderness of the beam 
