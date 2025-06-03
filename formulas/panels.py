@@ -67,7 +67,7 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
     tau_crit = round(tau_e * k_tau,2)
     reserveFactor = round(tau_crit/tau_xy,2)
-    return k_tau, tau_crit, abs(reserveFactor)
+    return round(k_tau,2), tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
