@@ -108,26 +108,26 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
     #Compute the scaling factors alpha 1 & alpha 2
     alpha1 = 0
     if 0.4 <= x1 <= 1.095:
-        alpha1 = 1.4-0.628*xi
+        alpha1 = 1.4-0.628*x1
     elif 1.095 < x1 <=1.633:
-        alpha1 = 0.78/xi
+        alpha1 = 0.78/x1
     elif 1.633 < x1:
-        alpha1 = 0.69/ pow(xi,0.75)
+        alpha1 = 0.69/ pow(x1,0.75)
     alpha2 = 0
     if 0.4 <= x2 <= 1.095:
-        alpha2 = 1.4-0.628*xi
+        alpha2 = 1.4-0.628*x2
     elif 1.095 < x2 <=1.633:
-        alpha2 = 0.78/xi
+        alpha2 = 0.78/x2
     elif 1.633 < x2:
-        alpha2 = 0.69/ pow(xi,0.75)
+        alpha2 = 0.69/ pow(x2,0.75)
     sigma_crippling1 = alpha1 * sigma_yield   #Compute crippling stress 1
     sigma_crippling2 = alpha2 * sigma_yield   #Compute crippling stress 2
     sigma_crippling = (2*sigma_crippling1*b1 + sigma_crippling2*b2)/(2*b1 + b2)
     return sigma_crippling
 
-def EulerJohnson(EModulus, I_y, area, length, DIM1, DIM2, DIM3, r = 0, sigma_yield, sigma_applied, c=1):
+def EulerJohnson(EModulus, I_y, area, length, DIM1, DIM2, DIM3, sigma_yield, sigma_applied, c=1, r = 0):
     lmd = hp.lmd(I_y, area, length, c)
-    sigma_cripple = sigma_crip(EModulus, DIM1, DIM2, DIM3,sigma_yield, r)    #returns the crippling stress of the T-stringer
+    sigma_cripple = sigma_crip(EModulus, DIM1, DIM2, DIM3,sigma_yield, r=0)    #returns the crippling stress of the T-stringer
     sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/sigma_applied
