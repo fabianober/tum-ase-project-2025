@@ -51,10 +51,10 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
         for m in range(1,M):
             k_sigma = pow((m**2 + n**2 * alpha**2), 2)/ (alpha**2 * (m**2 + beta * n**2 * alpha**2))  #buckling factor 
             if k_sigma > 0:
-                k_sigma_it.update({(n,m):round(abs(k_sigma),2)})                                    #critical stress dictionary in dependence of m and n 
+                k_sigma_it.update({(n,m):round(k_sigma,2)})                                    #critical stress dictionary in dependence of m and n 
     finalN, finalM = min(k_sigma_it, key = k_sigma_it.get)    #Select the smallest critcial stress and recover n and m 
     k_sigma_min = k_sigma_it[(finalN,finalM)] 
-    sigma_crit = k_sigma_min *  sigma_e                   #And then also recover the corresponding critical stress 
+    sigma_crit = round(k_sigma_min *  sigma_e, 2)                   #And then also recover the corresponding critical stress 
     reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
     return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
@@ -67,7 +67,7 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
     tau_crit = round(tau_e * k_tau,2)
     reserveFactor = round(tau_crit/tau_xy,2)
-    return k_tau, tau_crit, abs(reserveFactor)
+    return round(k_tau,2), tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
