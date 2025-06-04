@@ -30,7 +30,7 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
 
     return round(A_tot, 2), round(I_y_bar, 2)
 
-def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, stringer_pitch):
+def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, stringer_pitch, stringer_depth):
     """
     DIM1: height of the hat section
     DIM2: thickness of hat elements
@@ -48,6 +48,8 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
     A_bottom_left = DIM4 * DIM2
     A_bottom_right = DIM4 * DIM2
     A_tot = A_skin + A_top + A_left_web + A_right_web + A_bottom_left + A_bottom_right
+
+    V_tot = A_tot * stringer_depth  # Volume of the entire cross-section
 
     # z-coordinates (from bottom)
     z_skin = -thickness_skin / 2
@@ -79,7 +81,7 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 
     I_yy = contrib_skin + contrib_top + contrib_webs + contrib_bottoms
 
-    return round(I_yy, 2), round(A_tot, 2)
+    return round(I_yy, 2), round(A_tot, 2), round(V_tot, 2)  # Return moment of inertia, area, and volume
 
 
 #Column Buckling formulas 
