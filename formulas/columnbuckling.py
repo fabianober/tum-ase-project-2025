@@ -54,7 +54,7 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
     # z-coordinates (from bottom)
     z_skin = -thickness_skin / 2
     z_bottom = DIM2 / 2
-    z_web = (DIM1 - DIM2) / 2 + DIM2
+    z_web = (DIM1 - DIM2) / 2 #+ DIM2
     z_top = DIM1 - DIM2 / 2
 
     # Centroid (z_bar)
@@ -170,7 +170,7 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
 #Test cases for the formula 
 if __name__ == '__main__':
     # Example usage of crosssectional_properties_hat_skin
-    crossecProp = crosssectional_properties_hat_skin(DIM1=25, DIM2=2, DIM3=20, DIM4=15, thickness_skin=2, stringer_pitch=200, stringer_depth=750/3)
+    crossecProp = crosssectional_properties_hat_skin(DIM1=25, DIM2=2, DIM3=20, DIM4=15, thickness_skin=4, stringer_pitch=200, stringer_depth=750/3)
     print(f"Area: {crossecProp[1]}, Moment of Inertia: {crossecProp[0]}, Volume: {crossecProp[2]}")
 
     # Example usage of RambergOsgoodIt
