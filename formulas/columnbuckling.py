@@ -169,9 +169,9 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
 
 #Test cases for the formula 
 if __name__ == '__main__':
-    # Example usage of crosssectional_properties_tee_skin
-    crossecProp = crosssectional_properties_tee_skin(height_str=45, width_str=40, thickness_web=3, thickness_flange=3, thickness_skin=2, stringer_pitch=200)
-    print(f"Area: {crossecProp[0]}, Moment of Inertia: {crossecProp[1]}")
+    # Example usage of crosssectional_properties_hat_skin
+    crossecProp = crosssectional_properties_hat_skin(DIM1=25, DIM2=2, DIM3=20, DIM4=15, thickness_skin=2, stringer_pitch=200, stringer_depth=750/3)
+    print(f"Area: {crossecProp[1]}, Moment of Inertia: {crossecProp[0]}, Volume: {crossecProp[2]}")
 
     # Example usage of RambergOsgoodIt
     res = RambergOsgoodIt(EModulus=72000, I_y=crossecProp[1], area=crossecProp[0], length=600, sigma_applied=200, sigma_02=280, sigma_u=350, epsilon_u=0.1)
