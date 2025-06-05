@@ -45,7 +45,26 @@ def personal_data_provider(name):
         nu = 0.34
     return sigma_yield, EModulus, nu
 
-
+def add_component_names_to_elements(df, component_mapping_df, element_id_column='Element ID', component_name_column='Component Name'):
+    """
+    Add component names to a dataframe by matching element IDs with a mapping dataframe.
+    
+    Args:
+        df: Target dataframe to add component names to
+        component_mapping_df: Mapping dataframe containing element ID to component name matches
+        element_id_column: Column name for element ID in both dataframes
+        component_name_column: Column name for component name in the mapping dataframe
+    
+    Returns:
+        DataFrame with added component names
+    """
+    # Create a dictionary for faster lookups
+    component_dict = component_mapping_df.set_index(element_id_column)[component_name_column].to_dict()
+    
+    # Add component names using map function
+    df[component_name_column] = df[element_id_column].map(component_dict)
+    
+    return df
 
 #Running test on all functions 
 if __name__ == '__main__':
