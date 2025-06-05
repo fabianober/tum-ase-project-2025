@@ -43,11 +43,9 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
     # Area of each part
     A_skin = stringer_pitch * thickness_skin
     A_top = DIM3 * DIM2
-    A_left_web = DIM2 * (DIM1 - DIM2)
-    A_right_web = DIM2 * (DIM1 - DIM2)
-    A_bottom_left = DIM4 * DIM2
-    A_bottom_right = DIM4 * DIM2
-    A_tot = A_skin + A_top + A_left_web + A_right_web + A_bottom_left + A_bottom_right
+    A_side_web = DIM2 * (DIM1 - DIM2)
+    A_bottom = DIM4 * DIM2
+    A_tot = A_skin + A_top + 2 * A_side_web + 2 * A_bottom
 
     V_tot = A_tot * stringer_depth  # Volume of the entire cross-section
 
@@ -61,10 +59,8 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
     z_bar = (
         A_skin * z_skin +
         A_top * z_top +
-        A_left_web * z_web +
-        A_right_web * z_web +
-        A_bottom_left * z_bottom +
-        A_bottom_right * z_bottom
+        2 * A_side_web * z_web +
+        2 * A_bottom * z_bottom
     ) / A_tot
 
     # Moment of inertia about y-axis for each component
@@ -76,8 +72,8 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
     # Parallel axis theorem
     contrib_skin = I_y_skin + A_skin * (z_skin - z_bar)**2
     contrib_top = I_y_top + A_top * (z_top - z_bar)**2
-    contrib_webs = I_y_webs + A_left_web * (z_web - z_bar)**2 + A_right_web * (z_web - z_bar)**2
-    contrib_bottoms = I_y_bottoms + A_bottom_left * (z_bottom - z_bar)**2 + A_bottom_right * (z_bottom - z_bar)**2 
+    contrib_webs = I_y_webs + 2 * A_side_web * (z_web - z_bar)**2
+    contrib_bottoms = I_y_bottoms + 2 * A_bottom * (z_bottom - z_bar)**2 
 
     I_yy = contrib_skin + contrib_top + contrib_webs + contrib_bottoms
 
