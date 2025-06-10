@@ -16,15 +16,17 @@ def crosssectional_properties_tee_skin_row(row):
         stringer_pitch=row['stringer_pitch']
     )
 
-def crosssectional_properties_hat_skin_row(row):
+def crosssectional_properties_hat_skin_row(row, stringer_pitch):
     return colbuckl.crosssectional_properties_hat_skin(
-        DIM1=row['DIM1'],
-        DIM2=row['DIM2'],
-        DIM3=row['DIM3'],
+        DIM1=row['dim1'],
+        DIM2=row['dim2'],
+        DIM3=row['dim3'],
         DIM4=row['DIM4'],
-        thickness_skin=row['thickness_skin'],
-        stringer_pitch=row['stringer_pitch']
+        thickness_skin=row['thickness'],
+        stringer_pitch=stringer_pitch
     )
+
+
 
 def personal_data_provider(name):
     if name == 'yannis':

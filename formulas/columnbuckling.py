@@ -8,8 +8,8 @@ def panel_element_volume(row, elementLength, elementWidth):
 
 def stringer_element_volume(row, elementLength):
     area_top = row['dim3'] * row['dim2']
-    area_side_web = row[dim2] * (row[dim1] - row[dim2])
-    area_bottom = row[dim4] * row[dim2]
+    area_side_web = row['dim2'] * (row['dim1'] - row['dim2'])
+    area_bottom = row['dim4'] * row['dim2']
     areaTot = area_top + 2 * area_side_web + 2 * area_bottom
     volume = areaTot * elementLength
     return volume
