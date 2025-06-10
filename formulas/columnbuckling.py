@@ -92,9 +92,6 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 
     return round(I_yy, 2), round(A_tot, 2), round(V_tot, 2)  # Return moment of inertia, area, and volume
 
-def lambda_crit(EModulus, sigma_crip):
-    return math.sqrt(2*(math.pi**2) * EModulus / sigma_crip)
-
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):

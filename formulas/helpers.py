@@ -6,6 +6,9 @@ def lmd(I_y, area, length, c=1):
     lmd = (c*length)/r
     return round(lmd, 2)
 
+def lambda_crit(EModulus, sigma_crip):
+    return math.sqrt(2*(math.pi**2) * EModulus / sigma_crip)
+
 def r_gyr(I_y, area):
     return math.sqrt(I_y / area)
 
