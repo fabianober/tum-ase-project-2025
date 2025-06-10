@@ -130,15 +130,15 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
     sigma_crippling1 = alpha1 * sigma_yield   #Compute crippling stress 1
     sigma_crippling2 = alpha2 * sigma_yield   #Compute crippling stress 2
     sigma_crippling = (2*sigma_crippling1*b1 + sigma_crippling2*b2)/(2*b1 + b2)
-    return round(sigma_crippling, 2)
+    return sigma_crippling
 
-def EulerJohnson(EModulus, I_y, area, length, DIM1, DIM2, DIM3, sigma_yield, sigma_applied, c=1, r = 0):
-    lmd = hp.lmd(I_y, area, length, c)
-    sigma_cripple = sigma_crip(EModulus, DIM1, DIM2, DIM3,sigma_yield, r=0)    #returns the crippling stress of the T-stringer
+def EulerJohnson(row, EModulus, length,sigma_yield, c=1, r = 0):
+    lmd = hp.lmd(row['I_yy'], row['areaTot'], length, c)
+    sigma_cripple = sigma_crip(EModulus, row['dim1'], row['dim2'], row['dim3'],sigma_yield, r=0)    #returns the crippling stress of the T-stringer
     sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
-    reserveFactor = sigma_crit/sigma_applied
-    return round(sigma_crit,2), round(reserveFactor,2) 
+    reserveFactor = sigma_crit/row['sigma_XX_avg']
+    return round(sigma_crit,2), round(reserveFactor,2), round(sigma_cripple,2) 
 
 
 #Ramberg Osgood
