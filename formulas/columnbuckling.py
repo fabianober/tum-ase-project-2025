@@ -1,6 +1,14 @@
 import math
 import helpers as hp
 
+
+def panel_element_volume(row, elementLength, elementWidth):
+    halfVolume = (row['thickness']*elementLength*elementWidth)/2
+    return halfVolume 
+
+def stringer_element_volume(row, elementLength):
+    return volume
+
 def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thickness_flange, thickness_skin, stringer_pitch):
 
     # Individual moment of inertia calculations for the skin, flange, and web of a T-stringer
