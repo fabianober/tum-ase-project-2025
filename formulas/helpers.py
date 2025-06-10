@@ -6,6 +6,9 @@ def lmd(I_y, area, length, c=1):
     lmd = (c*length)/r
     return round(lmd, 2)
 
+def r_gyr(I_y, area):
+    return math.sqrt(I_y / area)
+
 def crosssectional_properties_tee_skin_row(row):
     return colbuckl.crosssectional_properties_tee_skin(
         height_str=row['height_str'],
