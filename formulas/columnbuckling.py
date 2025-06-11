@@ -137,7 +137,7 @@ def EulerJohnson(row, EModulus, sigma_yield, c=1, r = 0):
     sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/row['sigma_XX_avg']
-    return round(sigma_crit,2), round(reserveFactor,2), round(sigma_cripple,2) 
+    return sigma_crit, reserveFactor, sigma_cripple
 
 def chooseBuckling(row, EModulus, sigma_yield):
     if row['lambda'] > row['lambda_crit']:
