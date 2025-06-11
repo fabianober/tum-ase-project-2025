@@ -8,8 +8,8 @@ M = 20
 
 def uniaxialF_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("Uniaxial free edge")
-    sigma_crit = round((EModulus*pow(math.pi,2)) / (12*(1-pow(nu,2))) * pow(thickness/length,2),2)   #Calculate the critical stress 
-    reserveFactor = round(sigma_crit/sigma_x, 2)  #Calculate the reserve factor for this case 
+    sigma_crit = (EModulus*pow(math.pi,2)) / (12*(1-pow(nu,2))) * pow(thickness/length,2)   #Calculate the critical stress 
+    reserveFactor = sigma_crit/sigma_x  #Calculate the reserve factor for this case 
     return sigma_crit, abs(reserveFactor)
 
 def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
@@ -22,10 +22,10 @@ def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     for m in range(1,M):
         k_sigma = pow((m/alpha + alpha/m),2)
         sigma_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
-        sigma_crit_it.update({m:round(k_sigma * sigma_e, 2)}) 	    #Collect critcical values in a dictionary 
+        sigma_crit_it.update({m:k_sigma * sigma_e}) 	    #Collect critcical values in a dictionary 
     finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Recover the number of half waves, where the minimum critical stress occurs 
     sigma_crit = sigma_crit_it[finalM]                      #Also recover the corresponding critical stress 
-    reserveFactor = round(sigma_crit/sigma_x, 2)                      #Calculate the reserve factor with it 
+    reserveFactor = sigma_crit/sigma_x                    #Calculate the reserve factor with it 
     return finalM, sigma_crit, abs(reserveFactor)
 
 def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
@@ -51,11 +51,11 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
         for m in range(1,M):
             k_sigma = pow((m**2 + n**2 * alpha**2), 2)/ (alpha**2 * (m**2 + beta * n**2 * alpha**2))  #buckling factor 
             if k_sigma > 0:
-                k_sigma_it.update({(n,m):round(k_sigma,2)})                                    #critical stress dictionary in dependence of m and n 
+                k_sigma_it.update({(n,m):k_sigma})                                    #critical stress dictionary in dependence of m and n 
     finalN, finalM = min(k_sigma_it, key = k_sigma_it.get)    #Select the smallest critcial stress and recover n and m 
     k_sigma_min = k_sigma_it[(finalN,finalM)] 
-    sigma_crit = round(k_sigma_min *  sigma_e, 2)                   #And then also recover the corresponding critical stress 
-    reserveFactor = round(sigma_crit/sigma_x,2)                              #Calculate the reserve factor based on this the critical stress
+    sigma_crit = k_sigma_min *  sigma_e                   #And then also recover the corresponding critical stress 
+    reserveFactor = sigma_crit/sigma_x                          #Calculate the reserve factor based on this the critical stress
     return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
 def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
@@ -65,9 +65,9 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
     elif alpha >= 1:
         k_tau = 5.34 + (4/pow(alpha,2))
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
-    tau_crit = round(tau_e * k_tau,2)
-    reserveFactor = round(tau_crit/tau_xy,2)
-    return round(k_tau,2), tau_crit, abs(reserveFactor)
+    tau_crit = tau_e * k_tau
+    reserveFactor = tau_crit/tau_xy
+    return k_tau, tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("bending calculated")
@@ -75,7 +75,7 @@ def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
 def combinedBiaxialShear(EModulus, nu, length, width, thickness, sigma_x, sigma_y, tau_xy):
     finalN, finalM,k_biaxial, sigma_crit, reserveFactorBi = biaxialSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, sigma_x= sigma_x, sigma_y=sigma_y)
     k_shear, tau_crit, reserveFactorShear = shearSS_calc(EModulus=EModulus, nu=nu, length=length, width=width, thickness=thickness, tau_xy=tau_xy)
-    combinedReserveFactor = round(1/(1/reserveFactorBi + pow(1/reserveFactorShear,2)),2)
+    combinedReserveFactor = 1/(1/reserveFactorBi + pow(1/reserveFactorShear,2))
     return k_shear, k_biaxial, abs(combinedReserveFactor)
 
 
