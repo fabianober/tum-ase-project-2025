@@ -96,7 +96,7 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 #Euler Buckling case 
 def EulerBuckling(row, EModulus, c=1):
     lmd = row['lambda']
-    sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
+    sigma_crit = math.pi**2 * EModulus/(lmd**2)
     reserveFactor = sigma_crit/row['sigma_XX_avg']
     return sigma_crit, reserveFactor
 
