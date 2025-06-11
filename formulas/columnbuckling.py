@@ -97,7 +97,7 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 def EulerBuckling(row, EModulus, c=1):
     lmd = row['lambda']
     sigma_crit = math.pi**2 * EModulus/(lmd**2)
-    reserveFactor = sigma_crit/row['sigma_XX_avg']
+    reserveFactor = sigma_crit/(1.5*row['sigma_XX_avg'])
     return sigma_crit, abs(reserveFactor)
 
 
@@ -136,8 +136,8 @@ def EulerJohnson(row, EModulus, sigma_yield, c=1, r = 0):
     sigma_cripple = row['sigma_crip']    #returns the crippling stress of the hat-stringer
     sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
-    reserveFactor = sigma_crit/row['sigma_XX_avg']
-    return sigma_crit, reserveFactor, sigma_cripple
+    reserveFactor = sigma_crit/(1.5*row['sigma_XX_avg'])
+    return sigma_crit, abs(reserveFactor)
 
 def chooseBuckling(row, EModulus, sigma_yield):
     if row['lambda'] > row['lambda_crit']:
