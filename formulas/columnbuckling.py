@@ -41,7 +41,7 @@ def crosssectional_properties_tee_skin(height_str, width_str, thickness_web, thi
     contrib_web = I_y_web + (z_web-z_bar)**2 * A_web
     I_y_bar = contrib_skin + contrib_flange + contrib_web
 
-    return round(A_tot, 2), round(I_y_bar, 2)
+    return A_tot, I_y_bar
 
 def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, stringer_pitch, stringer_depth):
     """
@@ -90,13 +90,13 @@ def crosssectional_properties_hat_skin(DIM1, DIM2, DIM3, DIM4, thickness_skin, s
 
     I_yy = contrib_skin + contrib_top + contrib_webs + contrib_bottoms
 
-    return round(I_yy, 2), round(A_tot, 2), round(V_tot, 2)  # Return moment of inertia, area, and volume
+    return I_yy, A_tot, V_tot  # Return moment of inertia, area, and volume
 
 #Column Buckling formulas 
 #Euler Buckling case 
 def EulerBuckling(EModulus, I_y, area, length, sigma_applied, c=1):
     lmd = hp.lmd(I_y, area, length, c)
-    sigma_crit = round(math.pi**2 * EModulus/(lmd**2))
+    sigma_crit = math.pi**2 * EModulus/(lmd**2)
     reserveFactor = sigma_crit/sigma_applied
     return sigma_crit, reserveFactor
 
@@ -137,7 +137,7 @@ def EulerJohnson(row, EModulus, length,sigma_yield, c=1, r = 0):
     sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/row['sigma_XX_avg']
-    return round(sigma_crit,2), round(reserveFactor,2), round(sigma_cripple,2) 
+    return sigma_crit, reserveFactor, sigma_cripple
 
 
 #Ramberg Osgood
@@ -173,7 +173,7 @@ def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_
             break
 
     reserveFactor = sigma_crit / sigma_applied
-    return round(sigma_crit, 2), round(reserveFactor, 2) #return(critical stress, reserve factor)
+    return sigma_crit, reserveFactor #return(critical stress, reserve factor)
 
 #Test cases for the formula 
 if __name__ == '__main__':

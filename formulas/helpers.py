@@ -4,7 +4,7 @@ import columnbuckling as colbuckl
 def lmd(I_y, area, length, c=1):
     r = math.sqrt(I_y/area) 
     lmd = (c*length)/r
-    return round(lmd, 2)
+    return lmd
 
 def lambda_crit(EModulus, sigma_crip, sigma_yield):
     sigma_cutoff = min(sigma_crip, sigma_yield)
