@@ -9,7 +9,7 @@ M = 20
 def uniaxialF_calc(EModulus, nu, length, width, thickness, sigma_x):
     print("Uniaxial free edge")
     sigma_crit = (EModulus*pow(math.pi,2)) / (12*(1-pow(nu,2))) * pow(thickness/length,2)   #Calculate the critical stress 
-    reserveFactor = sigma_crit/sigma_x  #Calculate the reserve factor for this case 
+    reserveFactor = sigma_crit/ (sigma_x*1.5)  #Calculate the reserve factor for this case, 1.5 to get ultimate loads for the reserve factor
     return sigma_crit, abs(reserveFactor)
 
 def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
@@ -25,7 +25,7 @@ def uniaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x):
         sigma_crit_it.update({m:k_sigma * sigma_e}) 	    #Collect critcical values in a dictionary 
     finalM = min(sigma_crit_it, key = sigma_crit_it.get)    #Recover the number of half waves, where the minimum critical stress occurs 
     sigma_crit = sigma_crit_it[finalM]                      #Also recover the corresponding critical stress 
-    reserveFactor = sigma_crit/sigma_x                    #Calculate the reserve factor with it 
+    reserveFactor = sigma_crit/ (sigma_x*1.5)                    #Calculate the reserve factor with it, 1.5 to get ultimate loads for the reserve factor 
     return finalM, sigma_crit, abs(reserveFactor)
 
 def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
@@ -55,7 +55,7 @@ def biaxialSS_calc(EModulus, nu, length, width, thickness, sigma_x, sigma_y):
     finalN, finalM = min(k_sigma_it, key = k_sigma_it.get)    #Select the smallest critcial stress and recover n and m 
     k_sigma_min = k_sigma_it[(finalN,finalM)] 
     sigma_crit = k_sigma_min *  sigma_e                   #And then also recover the corresponding critical stress 
-    reserveFactor = sigma_crit/sigma_x                          #Calculate the reserve factor based on this the critical stress
+    reserveFactor = sigma_crit / (sigma_x*1.5)                          #Calculate the reserve factor based on this the critical stress, 1.5 to get ultimate loads for the reserve factor
     return finalN, finalM,k_sigma_min, sigma_crit, abs(reserveFactor)
 
 def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
@@ -66,7 +66,7 @@ def shearSS_calc(EModulus, nu, length, width, thickness, tau_xy):
         k_tau = 5.34 + (4/pow(alpha,2))
     tau_e = (EModulus*pow(math.pi,2))/(12*(1-pow(nu,2))) * pow(thickness/width,2)
     tau_crit = tau_e * k_tau
-    reserveFactor = tau_crit/tau_xy
+    reserveFactor = tau_crit / (tau_xy*1.5) # 1.5 to get ultimate loads for the reserve factor
     return k_tau, tau_crit, abs(reserveFactor)
 
 def bendingSS_calc(EModulus, nu, length, width, thickness, sigma_x):
