@@ -98,7 +98,7 @@ def EulerBuckling(row, EModulus, c=1):
     lmd = row['lambda']
     sigma_crit = math.pi**2 * EModulus/(lmd**2)
     reserveFactor = sigma_crit/row['sigma_XX_avg']
-    return sigma_crit, reserveFactor
+    return sigma_crit, abs(reserveFactor)
 
 
 #Euler Johnson with Crippling
