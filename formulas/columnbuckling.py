@@ -148,6 +148,9 @@ def chooseBuckling(row, EModulus, sigma_yield):
 
 
 #Ramberg Osgood
+"""
+Ramberg-Osgood function is not functional at the moment!
+"""
 def RambergOsgoodIt(EModulus, I_y, area, length, sigma_applied, sigma_02, sigma_u, epsilon_u, c=1, tol=0.001):
     lmd = hp.lmd(I_y, area, length, c)
     n = math.log(epsilon_u / 0.002) / math.log(sigma_u / sigma_02) # exponent
