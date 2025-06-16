@@ -126,9 +126,24 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
         alpha2 = 0.78/x2
     elif 1.633 < x2:
         alpha2 = 0.69/ pow(x2,0.75)
+
     sigma_crippling1 = alpha1 * sigma_yield   #Compute crippling stress 1
     sigma_crippling2 = alpha2 * sigma_yield   #Compute crippling stress 2
-    sigma_crippling = (2*sigma_crippling1*b1 + sigma_crippling2*b2)/(2*b1 + b2)
+    #Check weather one of the components cannot cripple at all ie xi<0.4
+    # Both components can cripple 
+    if alpha1 != 0 and alpha2!= 0:
+        sigma_crippling = (2*sigma_crippling1*b1 + sigma_crippling2*b2)/(2*b1 + b2)
+    # Only component 1 can cripple 
+    elif alpha2 == 0 and alpha1 != 0:
+        sigma_crippling = sigma_crippling1
+    # Only component 2 can cripple 
+    elif alpha1 == 0 and alpha2 != 0:
+        sigma_crippling = sigma_crippling2
+    # If both cannot cripple 
+    else:
+        sigma_crippling = 100000
+        print("Be careful both components cannot cripple")
+        
     return sigma_crippling
 
 def EulerJohnson(row, EModulus, sigma_yield, c=1, r = 0):
