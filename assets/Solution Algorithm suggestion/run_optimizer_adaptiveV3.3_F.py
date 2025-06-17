@@ -11,9 +11,9 @@ import sys
 import time
 
 """
-Algorithm takes around 5-7 hours to finish when approximating a single FEM call time with a time of 5 seconds per call.
+Algorithm takes around 14 hours to finish when approximating a single FEM call time with a time of 10 seconds per call.
 Algorithm is optimized to reduce the number of calles to the FEM function (max. 4900 per run)
-Initially this was designed for 10 input variables, so it might be a tad over-engineered. 
+Initially this was designed for 10 input variables but works for any number. 
 All expensive calls to the FEM function are being logged in the CSV file, which will be created as the ptogream runs.
 """
 
