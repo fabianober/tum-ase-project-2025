@@ -143,13 +143,12 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
     else:
         sigma_crippling = 100000
         print("Be careful both components cannot cripple")
-        
+    sigma_crippling = min(sigma_crippling,sigma_yield)
     return sigma_crippling
 
 def EulerJohnson(row, EModulus, sigma_yield, c=1, r = 0):
     lmd = row['lambda']
-    sigma_cripple = row['sigma_crip']    #returns the crippling stress of the hat-stringer
-    sigma_cutoff = min(sigma_cripple, sigma_yield)  #Determine the inzterpolation stress
+    sigma_cutoff = row['sigma_crip']    #returns the crippling stress of the hat-stringer
     sigma_crit = sigma_cutoff - 1/EModulus*(sigma_cutoff/(2*math.pi))**2 * lmd**2 # interpolate crictical stress
     reserveFactor = sigma_crit/(1.5*row['sigma_XX_avg'])
     return sigma_crit, abs(reserveFactor)
