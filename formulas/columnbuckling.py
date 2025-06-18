@@ -141,8 +141,7 @@ def sigma_crip(EModulus, DIM1, DIM2, DIM3, sigma_yield, r):
         sigma_crippling = sigma_crippling2
     # If both cannot cripple 
     else:
-        sigma_crippling = 100000
-        print("Be careful both components cannot cripple")
+        sigma_crippling = sigma_yield
     sigma_crippling = min(sigma_crippling,sigma_yield)
     return sigma_crippling
 
