@@ -29,7 +29,7 @@ USER_INPUTS = {
         # 5 skin panel thicknesses
         'skin_thickness_1', 'skin_thickness_2', 'skin_thickness_3', 'skin_thickness_4', 'skin_thickness_5'
     ],
-    'bounds': [(0.01, 30.0)] * 25,
+    'bounds': [(0.3, 15.0)] * 25,
     'target_rf': 1.05,
     'fem_call_budget': 5000,  # Can be increased
     'log_folder': "optimizer_logs",
